@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>{{ task.title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/app.css') }}">
+    <script src="{{ url_for('static', path='/app.js') }}" defer></script>
+</head>
+<body>
+<main class="card"
+      data-state="{{ effective_state }}"
+      data-status-url="/api/v1/public/{{ task.public_token }}/status">
+    <p class="eyebrow">CSCape · Fotoprüfung</p>
+    <h1>{{ task.title }}</h1>
+    <p class="instruction">{{ task.public_instruction }}</p>
+
+    <div id="status" class="status" role="status" aria-live="polite"></div>
+
+    <form id="upload-form"
+          action="/api/v1/public/{{ task.public_token }}/submit"
+          method="post"
+          enctype="multipart/form-data">
+        <label class="file-picker" for="image">
+            <span>Foto aufnehmen oder auswählen</span>
+            <input id="image"
+                   name="image"
+                   type="file"
+                   accept="image/jpeg,image/png,image/*"
+                   capture="environment"
+                   required>
+        </label>
+
+        <img id="preview" class="preview" alt="Vorschau des ausgewählten Fotos" hidden>
+
+        <button id="submit-button" type="submit">Foto prüfen</button>
+    </form>
+
+    <p class="meta">
+        Versuche: <span id="attempt-count">{{ task.attempt_count }}</span>/{{ task.max_attempts }}
+    </p>
+    <p class="privacy">Das Bild wird zur Prüfung an xAI übertragen und auf diesem Server nicht gespeichert.</p>
+</main>
+</body>
+</html>

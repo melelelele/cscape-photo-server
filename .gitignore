@@ -1,0 +1,12 @@
+.env
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+.idea/
+.vscode/
+.DS_Store
+.env.example
+.env.backup.20260723-173329
