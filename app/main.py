@@ -220,7 +220,7 @@ async def submit_photo(
         if failed_task is not None:
             failed_task.state = "error"
             failed_task.last_error = str(exc)
-            failed_task.reason = "Der Prüfdienst ist momentan nicht erreichbar. Bitte erneut versuchen."
+            failed_task.reason = "The verification service is currently unavailable. Please try again."
             failed_task.attempt_count = max(0, failed_task.attempt_count - 1)
             failed_task.last_attempt_at = None
             db.commit()

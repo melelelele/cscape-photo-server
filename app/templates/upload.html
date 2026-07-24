@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,7 +12,7 @@
 <main class="card"
       data-state="{{ effective_state }}"
       data-status-url="/api/v1/public/{{ task.public_token }}/status">
-    <p class="eyebrow">CSCape · Fotoprüfung</p>
+    <p class="eyebrow">CSCape · Photo Verification</p>
     <h1>{{ task.title }}</h1>
     <p class="instruction">{{ task.public_instruction }}</p>
 
@@ -23,7 +23,7 @@
           method="post"
           enctype="multipart/form-data">
         <label class="file-picker" for="image">
-            <span>Foto aufnehmen oder auswählen</span>
+            <span>Take or select a photo</span>
             <input id="image"
                    name="image"
                    type="file"
@@ -32,15 +32,15 @@
                    required>
         </label>
 
-        <img id="preview" class="preview" alt="Vorschau des ausgewählten Fotos" hidden>
+        <img id="preview" class="preview" alt="Preview of the selected photo" hidden>
 
-        <button id="submit-button" type="submit">Foto prüfen</button>
+        <button id="submit-button" type="submit">Verify photo</button>
     </form>
 
     <p class="meta">
-        Versuche: <span id="attempt-count">{{ task.attempt_count }}</span>/{{ task.max_attempts }}
+        Attempts: <span id="attempt-count">{{ task.attempt_count }}</span>/{{ task.max_attempts }}
     </p>
-    <p class="privacy">Das Bild wird zur Prüfung an xAI übertragen und auf diesem Server nicht gespeichert.</p>
+    <p class="privacy">The image is sent to xAI for verification and is not stored on this server.</p>
 </main>
 </body>
 </html>

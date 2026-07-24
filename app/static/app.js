@@ -22,31 +22,31 @@ function applyServerStatus(data) {
     attemptCount.textContent = String(data.attempt_count ?? "-");
 
     if (data.state === "solved" || data.solved === true) {
-        showStatus(data.reason || "Aufgabe erfüllt!", "success");
+        showStatus(data.reason || "Task completed!", "success");
         setFormEnabled(false);
         return;
     }
 
     if (data.state === "expired") {
-        showStatus("Diese Aufgabe ist abgelaufen.", "error");
+        showStatus("This task has expired.", "error");
         setFormEnabled(false);
         return;
     }
 
     if (data.state === "checking") {
-        showStatus("Das Foto wird gerade geprüft …", "info");
+        showStatus("The photo is being verified…", "info");
         setFormEnabled(false);
         return;
     }
 
     if (data.state === "rejected") {
-        showStatus(data.reason || "Die Aufgabe ist auf diesem Foto noch nicht eindeutig erfüllt.", "error");
+        showStatus(data.reason || "The task is not yet clearly fulfilled in this photo.", "error");
     } else if (data.state === "error") {
-        showStatus(data.reason || "Die Prüfung ist fehlgeschlagen. Bitte erneut versuchen.", "error");
+        showStatus(data.reason || "Verification failed. Please try again.", "error");
     }
 
     if (data.attempt_count >= data.max_attempts) {
-        showStatus("Es sind keine weiteren Versuche verfügbar.", "error");
+        showStatus("No more attempts available.", "error");
         setFormEnabled(false);
     }
 }
@@ -86,12 +86,12 @@ form.addEventListener("submit", async (event) => {
 
     const file = fileInput.files?.[0];
     if (!file) {
-        showStatus("Bitte zuerst ein Foto auswählen.", "error");
+        showStatus("Please select a photo first.", "error");
         return;
     }
 
     setFormEnabled(false);
-    showStatus("Foto wird vorbereitet und geprüft …", "info");
+    showStatus("Preparing and verifying photo…", "info");
 
     try {
         const jpegBlob = await resizeToJpeg(file, 1600, 0.85);
@@ -108,7 +108,7 @@ form.addEventListener("submit", async (event) => {
         if (!response.ok) {
             const detail = typeof data.detail === "string"
                 ? data.detail
-                : data.detail?.message || "Die Prüfung konnte nicht durchgeführt werden.";
+                : data.detail?.message || "Verification could not be performed.";
             throw new Error(detail);
         }
 
@@ -117,7 +117,7 @@ form.addEventListener("submit", async (event) => {
             setFormEnabled(true);
         }
     } catch (error) {
-        showStatus(error instanceof Error ? error.message : "Unbekannter Fehler", "error");
+        showStatus(error instanceof Error ? error.message : "Unknown error", "error");
         setFormEnabled(true);
     }
 });
@@ -133,7 +133,7 @@ async function resizeToJpeg(file, maxDimension, quality) {
     canvas.height = height;
 
     const context = canvas.getContext("2d", { alpha: false });
-    if (!context) throw new Error("Der Browser kann das Foto nicht verarbeiten.");
+    if (!context) throw new Error("The browser cannot process the photo.");
 
     context.fillStyle = "white";
     context.fillRect(0, 0, width, height);
@@ -141,7 +141,7 @@ async function resizeToJpeg(file, maxDimension, quality) {
 
     return await new Promise((resolve, reject) => {
         canvas.toBlob(
-            (blob) => blob ? resolve(blob) : reject(new Error("Das Foto konnte nicht konvertiert werden.")),
+            (blob) => blob ? resolve(blob) : reject(new Error("The photo could not be converted.")),
             "image/jpeg",
             quality,
         );
@@ -158,7 +158,7 @@ function loadImage(file) {
         };
         image.onerror = () => {
             URL.revokeObjectURL(objectUrl);
-            reject(new Error("Dieses Bildformat wird vom Browser nicht unterstützt."));
+            reject(new Error("This image format is not supported by the browser."));
         };
         image.src = objectUrl;
     });
