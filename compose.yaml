@@ -71,38 +71,6 @@ services:
       - no-new-privileges:true
 
 
-  # Wird im internen Uni-Betrieb nicht gestartet.
-  # Später kann Caddy für einen öffentlichen Domainbetrieb verwendet werden.
-  caddy:
-    image: caddy:2-alpine
-    restart: unless-stopped
-
-    profiles:
-      - public
-
-    environment:
-      DOMAIN: ${DOMAIN:-localhost}
-
-    depends_on:
-      app:
-        condition: service_healthy
-
-    ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
-
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
-      - caddy_config:/config
-
-    networks:
-      - frontend
-
-    security_opt:
-      - no-new-privileges:true
-
 
 volumes:
   postgres_data:
