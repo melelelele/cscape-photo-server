@@ -1,7 +1,7 @@
 import logging
 import secrets
 from contextlib import asynccontextmanager
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from fastapi import Depends, FastAPI, File, HTTPException, Request, UploadFile, status
@@ -81,7 +81,7 @@ def register_task(
         )
     )
 
-    expires_at = datetime.now(UTC) + timedelta(seconds=payload.expires_in_seconds)
+    expires_at = datetime.now(timezone.utc) + timedelta(seconds=payload.expires_in_seconds)
 
     if task is None:
         task = PhotoTask(
@@ -190,7 +190,7 @@ async def submit_photo(
     if task is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Task not found")
 
-    now = datetime.now(UTC)
+    now = datetime.now(timezone.utc)
     if task.solved:
         db.rollback()
         return _public_status_response(task)
@@ -304,14 +304,14 @@ def _assert_task_accepts_attempt(task: PhotoTask, now: datetime, settings: Setti
 
 
 def _effective_state(task: PhotoTask) -> str:
-    if task.expires_at <= datetime.now(UTC):
+    if task.expires_at <= datetime.now(timezone.utc):
         return "expired"
     return task.state
 
 
 def _public_status_response(task: PhotoTask) -> PublicStatusResponse:
     retry_after: int | None = None
-    now = datetime.now(UTC)
+    now = datetime.now(timezone.utc)
     if task.last_attempt_at is not None and not task.solved:
         retry_at = task.last_attempt_at + timedelta(seconds=task.cooldown_seconds)
         if retry_at > now:
