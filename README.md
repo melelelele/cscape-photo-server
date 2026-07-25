@@ -62,25 +62,9 @@ In the current implementation, the photo is only processed in memory and not sto
 └── README.md
 ```
 
-## Network Note for the University Server
 
-The designated university server is reachable at the following private address:
 
-```text
-10.127.0.17
-```
 
-This address is not a public internet address. It is only reachable from networks that have a route to the university network.
-
-.
-
-For the initially planned internal operation, the URL is:
-
-```text
-http://10.127.0.17:8000
-```
-
----
 
 # 1. Prerequisites
 
